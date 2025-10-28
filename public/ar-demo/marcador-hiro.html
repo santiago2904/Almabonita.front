@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>🖨️ Marcador HIRO - Para Imprimir</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .instructions {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .instructions h3 {
+            color: #0066cc;
+            margin-top: 0;
+        }
+        .marker-container {
+            text-align: center;
+            margin: 30px 0;
+            page-break-inside: avoid;
+        }
+        .hiro-marker {
+            width: 400px;
+            height: 400px;
+            max-width: 100%;
+            border: 2px solid #333;
+            background: white;
+            display: inline-block;
+        }
+        .print-instructions {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .print-instructions h4 {
+            color: #856404;
+            margin-top: 0;
+        }
+        .btn {
+            background: #28a745;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover { background: #218838; }
+        .btn-primary { background: #007bff; }
+        .btn-primary:hover { background: #0056b3; }
+        
+        @media print {
+            body { background: white; }
+            .no-print { display: none !important; }
+            .container { 
+                box-shadow: none; 
+                border: none; 
+                max-width: none;
+                margin: 0;
+                padding: 0;
+            }
+            .hiro-marker {
+                width: 15cm;
+                height: 15cm;
+                page-break-before: always;
+            }
+        }
+        
+        .size-options {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .size-btn {
+            background: #6c757d;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .size-btn.active { background: #007bff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖨️ Marcador HIRO para AR</h1>
+
+        <div class="instructions no-print">
+            <h3>📋 Instrucciones de uso:</h3>
+            <ol>
+                <li><strong>Imprime</strong> el marcador en papel blanco normal</li>
+                <li><strong>Recorta</strong> siguiendo el borde negro</li>
+                <li><strong>Pega</strong> en una superficie plana y rígida</li>
+                <li><strong>Usa</strong> con cualquier aplicación AR que soporte HIRO</li>
+            </ol>
+        </div>
+
+        <div class="size-options no-print">
+            <div><strong>📏 Selecciona el tamaño:</strong></div>
+            <button class="size-btn" onclick="setSize('small')">Pequeño (10cm)</button>
+            <button class="size-btn active" onclick="setSize('medium')">Mediano (15cm)</button>
+            <button class="size-btn" onclick="setSize('large')">Grande (20cm)</button>
+        </div>
+
+        <div class="marker-container">
+            <div><strong>🎯 Marcador HIRO</strong></div>
+            <br>
+            <!-- Marcador HIRO SVG -->
+            <svg class="hiro-marker" id="hiro-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                <!-- Fondo blanco -->
+                <rect width="400" height="400" fill="white" stroke="black" stroke-width="4"/>
+                
+                <!-- Borde exterior negro -->
+                <rect x="20" y="20" width="360" height="360" fill="black"/>
+                
+                <!-- Borde interior blanco -->
+                <rect x="40" y="40" width="320" height="320" fill="white"/>
+                
+                <!-- Patrón HIRO -->
+                <g transform="translate(200,200)">
+                    <!-- Centro -->
+                    <rect x="-60" y="-60" width="120" height="120" fill="black"/>
+                    <rect x="-40" y="-40" width="80" height="80" fill="white"/>
+                    <rect x="-20" y="-20" width="40" height="40" fill="black"/>
+                    
+                    <!-- Esquinas -->
+                    <!-- Esquina superior izquierda -->
+                    <rect x="-140" y="-140" width="60" height="60" fill="black"/>
+                    <rect x="-120" y="-120" width="20" height="20" fill="white"/>
+                    
+                    <!-- Esquina superior derecha -->
+                    <rect x="80" y="-140" width="60" height="60" fill="black"/>
+                    <rect x="100" y="-120" width="20" height="20" fill="white"/>
+                    
+                    <!-- Esquina inferior izquierda -->
+                    <rect x="-140" y="80" width="60" height="60" fill="black"/>
+                    <rect x="-120" y="100" width="20" height="20" fill="white"/>
+                    
+                    <!-- Esquina inferior derecha -->
+                    <rect x="80" y="80" width="60" height="60" fill="black"/>
+                    <rect x="100" y="100" width="20" height="20" fill="white"/>
+                    
+                    <!-- Marcadores laterales -->
+                    <!-- Superior -->
+                    <rect x="-10" y="-140" width="20" height="60" fill="black"/>
+                    
+                    <!-- Inferior -->
+                    <rect x="-10" y="80" width="20" height="60" fill="black"/>
+                    
+                    <!-- Izquierda -->
+                    <rect x="-140" y="-10" width="60" height="20" fill="black"/>
+                    
+                    <!-- Derecha -->
+                    <rect x="80" y="-10" width="60" height="20" fill="black"/>
+                </g>
+                
+                <!-- Texto identificativo (opcional, pequeño) -->
+                <text x="200" y="390" text-anchor="middle" font-family="Arial" font-size="12" fill="black">HIRO</text>
+            </svg>
+        </div>
+
+        <div class="print-instructions no-print">
+            <h4>🖨️ Consejos para imprimir:</h4>
+            <ul>
+                <li><strong>Papel:</strong> Blanco normal (no brillante)</li>
+                <li><strong>Calidad:</strong> Máxima resolución</li>
+                <li><strong>Color:</strong> Blanco y negro (no escala grises)</li>
+                <li><strong>Tamaño:</strong> Sin escalar, tamaño real</li>
+                <li><strong>Márgenes:</strong> Mínimos o sin márgenes</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;" class="no-print">
+            <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir Marcador</button>
+            <a href="./ar-creator.html" class="btn">🔙 Volver al Creador</a>
+            <a href="./ar-viewer.html?img=./assets/foto.jpg&text=¡Prueba con HIRO!&color=%23ffffff&animation=pulse" class="btn" target="_blank">🧪 Probar AR</a>
+        </div>
+
+        <div class="instructions no-print">
+            <h3>🔧 Uso con AR:</h3>
+            <p>Este marcador funciona con cualquier aplicación AR.js que use el preset "hiro". Es más estable y confiable que los marcadores personalizados.</p>
+            
+            <div style="background: #d4edda; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                <strong>✅ Ventajas del marcador HIRO:</strong>
+                <ul>
+                    <li>Detección muy estable</li>
+                    <li>Funciona en diversas condiciones de luz</li>
+                    <li>Optimizado para AR.js</li>
+                    <li>No requiere calibración</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setSize(size) {
+            const svg = document.getElementById('hiro-svg');
+            const buttons = document.querySelectorAll('.size-btn');
+            
+            // Remover clase active de todos los botones
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Agregar clase active al botón seleccionado
+            event.target.classList.add('active');
+            
+            // Cambiar tamaño
+            const sizes = {
+                small: '300px',
+                medium: '400px',
+                large: '500px'
+            };
+            
+            svg.style.width = sizes[size];
+            svg.style.height = sizes[size];
+            
+            console.log(`📏 Tamaño cambiado a: ${size}`);
+        }
+
+        // Configurar impresión
+        window.addEventListener('beforeprint', () => {
+            console.log('🖨️ Preparando para imprimir...');
+        });
+
+        window.addEventListener('afterprint', () => {
+            console.log('✅ Impresión completada');
+        });
+
+        console.log('🖨️ Página de marcador HIRO cargada');
+    </script>
+</body>
+</html>
