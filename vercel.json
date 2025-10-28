@@ -1,0 +1,11 @@
+{
+  "functions": {
+    "app/api/upload/route.ts": {
+      "maxDuration": 60
+    }
+  },
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "regions": ["iad1"]
+}

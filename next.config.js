@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost', 'via.placeholder.com', 'api.qrserver.com']
+    domains: ['localhost', 'via.placeholder.com', 'api.qrserver.com', 'res.cloudinary.com']
   },
   async rewrites() {
     return [
@@ -14,7 +14,9 @@ const nextConfig = {
         destination: 'http://localhost:5500/images'
       }
     ]
-  }
+  },
+  // Configuración específica para Vercel
+  serverExternalPackages: ['cloudinary']
 }
 
 module.exports = nextConfig
