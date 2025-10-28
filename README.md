@@ -49,9 +49,27 @@ cd Almabonita.front
 # Instalar dependencias
 npm install
 
+# Configurar variables de entorno
+cp .env.example .env.local
+# Edita .env.local con tus credenciales de Cloudinary
+
 # Ejecutar en desarrollo
 npm run dev
 ```
+
+### Configuración de Cloudinary
+
+1. **Crear cuenta gratuita** en [Cloudinary](https://cloudinary.com/users/register_free)
+2. **Obtener credenciales** del Dashboard
+3. **Configurar variables de entorno**:
+
+```bash
+CLOUDINARY_CLOUD_NAME=tu_cloud_name
+CLOUDINARY_API_KEY=tu_api_key  
+CLOUDINARY_API_SECRET=tu_api_secret
+```
+
+4. **En Vercel**: Agregar las variables en Settings > Environment Variables
 
 La aplicación estará disponible en `http://localhost:3000`
 
