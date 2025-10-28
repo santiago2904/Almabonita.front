@@ -1,4 +1,9 @@
 {
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/upload/route": "app/api/upload/route.js",
   "/ar-viewer/page": "app/ar-viewer/page.js",
-  "/ar-creator/page": "app/ar-creator/page.js"
+  "/ar-creator/page": "app/ar-creator/page.js",
+  "/test-ar/page": "app/test-ar/page.js",
+  "/page": "app/page.js",
+  "/test-styles/page": "app/test-styles/page.js"
 }

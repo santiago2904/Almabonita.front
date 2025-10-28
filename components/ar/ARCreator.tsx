@@ -79,14 +79,22 @@ export function ARCreator() {
   } | null>(null);
 
   const handleFileSelect = useCallback(async (file: File) => {
+    console.log('📂 File selected in ARCreator:', {
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      lastModified: new Date(file.lastModified).toISOString()
+    });
+    
     setPreview(file);
     
     // Capturar información de la imagen
+    console.log('🖼️ Creating image object for dimensions...');
     const img = new Image();
     const objectUrl = URL.createObjectURL(file);
     
     img.onload = () => {
-      setImageInfo({
+      const imageInfo = {
         name: file.name,
         size: file.size,
         type: file.type,
@@ -94,19 +102,30 @@ export function ARCreator() {
           width: img.naturalWidth,
           height: img.naturalHeight
         }
-      });
+      };
+      console.log('📏 Image dimensions captured:', imageInfo);
+      setImageInfo(imageInfo);
       URL.revokeObjectURL(objectUrl);
     };
     
     img.src = objectUrl;
     
     try {
+      console.log('☁️ Starting file upload...');
       const result = await uploadFile(file);
+      console.log('📤 Upload result:', result);
+      
       if (result.success && result.url) {
+        console.log('✅ Updating config with image URL:', result.url);
         updateConfig({ imageUrl: result.url });
+      } else {
+        console.error('❌ Upload failed or no URL returned:', result);
       }
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error('💥 Error in handleFileSelect:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        error: error
+      });
     }
   }, [setPreview, uploadFile, updateConfig]);
 
