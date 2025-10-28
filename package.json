@@ -26,6 +26,7 @@
     "@types/react-dom": "^18",
     "autoprefixer": "^10",
     "class-variance-authority": "^0.7.1",
+    "cloudinary": "^2.8.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.290.0",
     "next": "15.0.0",

@@ -1,9 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
+import { v2 as cloudinary } from 'cloudinary';
+
+// Configurar Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(request: NextRequest) {
   try {
+    // Verificar que Cloudinary esté configurado
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      return NextResponse.json(
+        { error: 'Configuración de Cloudinary incompleta' },
+        { status: 500 }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get('image') as File;
     
@@ -22,41 +36,59 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validar tamaño (5MB máximo)
-    if (file.size > 5 * 1024 * 1024) {
+    // Validar tamaño (10MB máximo para Cloudinary)
+    if (file.size > 10 * 1024 * 1024) {
       return NextResponse.json(
-        { error: 'El archivo es demasiado grande. Máximo 5MB' },
+        { error: 'El archivo es demasiado grande. Máximo 10MB' },
         { status: 400 }
       );
     }
 
-    // Generar nombre único
+    // Convertir archivo a base64 para Cloudinary
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    const base64 = buffer.toString('base64');
+    const dataUri = `data:${file.type};base64,${base64}`;
+
+    // Subir a Cloudinary
+    const result = await cloudinary.uploader.upload(dataUri, {
+      folder: 'almabonita-ar', // Organizar en carpeta
+      public_id: `${Date.now()}-${Math.round(Math.random() * 1E9)}`, // ID único
+      resource_type: 'image',
+      quality: 'auto', // Optimización automática
+      fetch_format: 'auto', // Formato automático
+      transformation: [
+        { width: 1920, height: 1080, crop: 'limit' }, // Limitar tamaño máximo
+        { quality: 'auto:good' } // Calidad optimizada
+      ]
+    });
     
-    const fileExtension = file.name.split('.').pop() || 'jpg';
-    const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1E9)}.${fileExtension}`;
-    
-    // Guardar en public/uploads
-    const uploadPath = join(process.cwd(), 'public/uploads', uniqueName);
-    await writeFile(uploadPath, buffer);
-    
-    const imagePath = `/uploads/${uniqueName}`;
-    
-    console.log('📸 Imagen subida:', imagePath);
+    console.log('📸 Imagen subida a Cloudinary:', {
+      url: result.secure_url,
+      public_id: result.public_id,
+      size: result.bytes
+    });
     
     return NextResponse.json({
       success: true,
-      imagePath: imagePath,
+      imageUrl: result.secure_url,
+      imagePath: result.secure_url, // Para compatibilidad
+      url: result.secure_url, // Añadir url para compatibilidad
       originalName: file.name,
       size: file.size,
-      isNgrok: false
+      cloudinaryId: result.public_id,
+      optimizedSize: result.bytes,
+      isCloudinary: true,
+      message: 'Imagen subida exitosamente a Cloudinary'
     });
     
   } catch (error) {
-    console.error('Upload error:', error);
+    console.error('❌ Error subiendo a Cloudinary:', error);
     return NextResponse.json(
-      { error: 'Failed to upload image' },
+      { 
+        error: 'Error al subir la imagen',
+        details: error instanceof Error ? error.message : 'Error desconocido'
+      },
       { status: 500 }
     );
   }
